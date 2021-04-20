@@ -20,6 +20,7 @@
 
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeApplications #-}
@@ -59,15 +60,9 @@ import qualified GHC.Exts (IsList(..))
 import GHC.Generics (Generic)
 import GHC.Stack (HasCallStack)
 
-import Test.QuickCheck
-         ( Arbitrary, Gen
-         , arbitrary, choose, getPositive, sized
-         )
-
 import Control.DeepSeq (NFData)
+import Data.Portray (Portray(..), Portrayal(..))
 import Data.Serialize (Serialize)
-import Text.PrettyPrint.Annotated.HughesPJ (sep, text, nest, maybeParens)
-import Text.PrettyPrint.Annotated.HughesPJClass (Pretty(..))
 
 -- Invariant: 'RLE' never contains two adjacent entries with equal @a@ values.
 -- Invariant: 'RLE' never contains zero-length runs.
@@ -87,13 +82,14 @@ newtype RLE a = RLE
     --
     -- This is not a retraction of 'fromRuns': @toRuns . fromRuns@ merges
     -- adjacent runs of equal values and eliminates empty runs.
-  } deriving (Eq, Show, Generic)
+  }
+  deriving (Eq, Show, Generic)
 
-instance Pretty a => Pretty (RLE a) where
-  pPrintPrec l p rle = maybeParens (p > 10) $
-    sep [text "fromRuns", nest 2 $ pPrintPrec l 0 (toRuns rle)]
 instance NFData a => NFData (RLE a)
 instance Serialize a => Serialize (RLE a)
+
+instance Portray a => Portray (RLE a) where
+  portray rle = Apply "fromRuns" [List $ portray <$> toRuns rle]
 
 instance Eq a => IsList (RLE a) where
   type Item (RLE a) = a
@@ -264,15 +260,3 @@ init (RLE rs0) = RLE $ go rs0
   go []        = error "RLE.init: empty RLE"
   go (r0:r:rs) = r0 : go (r:rs)
   go [(n, x)] = [(n-1, x) | n > 1]
-
-instance (Arbitrary a, Eq a) => Arbitrary (RLE a) where
-  arbitrary = sized (arbitrarySizedRLE arbitrary)
-
-arbitrarySizedRLE :: Eq a => Gen a -> Int -> Gen (RLE a)
-arbitrarySizedRLE genElement n = do
-  maxRun <- arbitrary
-  resultList <- replicateM n $ do
-    element <- genElement
-    runLen <- choose (1, getPositive maxRun)
-    pure (runLen, element)
-  pure (fromRuns resultList)

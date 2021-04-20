@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b53b6d319d758bbd1f4f243262ba2cd4b76c7fbbe465daa5a666e961533b02d8
+-- hash: fb18b59d2f0541d2e599414471366a28a050b57b2c5775232efa1b8a0869932c
 
 name:           rle
 version:        0.1.0.0
@@ -35,11 +35,10 @@ library
       src
   ghc-options: -Wall -Werror
   build-depends:
-      QuickCheck
-    , base
-    , cereal
-    , deepseq
-    , pretty
+      base >=4.12 && <4.16
+    , cereal >=0.5.2 && <0.6
+    , deepseq >=1.4 && <1.5
+    , portray >=0.1 && <0.2
   default-language: Haskell2010
 
 test-suite RLE-test
@@ -52,10 +51,10 @@ test-suite RLE-test
   ghc-options: -Wall -Werror
   build-depends:
       QuickCheck
-    , base
-    , cereal
-    , deepseq
-    , pretty
+    , base >=4.12 && <4.16
+    , cereal >=0.5.2 && <0.6
+    , deepseq >=1.4 && <1.5
+    , portray >=0.1 && <0.2
     , rle
     , test-framework
     , test-framework-quickcheck2

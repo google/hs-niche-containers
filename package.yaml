@@ -30,11 +30,10 @@ extra-source-files:
 ghc-options: -Wall -Werror
 
 dependencies:
-  - base
-  - cereal
-  - deepseq
-  - pretty
-  - QuickCheck
+  - base >= 4.12 && < 4.16
+  - cereal >= 0.5.2 && < 0.6
+  - deepseq >= 1.4 && < 1.5
+  - portray >= 0.1 && < 0.2
 
 library:
   source-dirs: src

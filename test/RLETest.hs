@@ -18,12 +18,29 @@
 
 module Main where
 
-import Data.RLE(RLE, fromList, toList)
+import Control.Monad (replicateM)
+
+import Test.Framework (defaultMain)
+import Test.Framework.Providers.QuickCheck2 (testProperty)
+import Test.QuickCheck
+         ( (===), Arbitrary(..), Property
+         , Gen, choose, forAll, sized, getPositive
+         )
+
+import Data.RLE (RLE, fromList, toList)
 import qualified Data.RLE as RLE
 
-import Test.Framework(defaultMain)
-import Test.Framework.Providers.QuickCheck2(testProperty)
-import Test.QuickCheck(Arbitrary, Property, (===), arbitrary, choose, forAll)
+arbitrarySizedRLE :: Eq a => Gen a -> Int -> Gen (RLE a)
+arbitrarySizedRLE genElement n = do
+  maxRun <- arbitrary
+  resultList <- replicateM n $ do
+    element <- genElement
+    runLen <- choose (1, getPositive maxRun)
+    pure (runLen, element)
+  pure (RLE.fromRuns resultList)
+
+rles :: (Eq a, Arbitrary a) => Gen (RLE a)
+rles = sized (arbitrarySizedRLE arbitrary)
 
 prop_reverse :: (Eq a, Show a) => RLE a -> Property
 prop_reverse rle = RLE.reverse rle === (fromList . reverse . toList) rle
@@ -39,7 +56,7 @@ prop_toList_fromList xs = xs === (toList . fromList) xs
 
 prop_take :: forall a . (Arbitrary a, Eq a, Show a) => Property
 prop_take =
-  forAll arbitrary $ \rle ->
+  forAll rles $ \rle ->
   forAll (choose (-1, RLE.length rle + 1)) $ \i ->
   prop_take' @a i rle
 
@@ -49,7 +66,7 @@ prop_take' i rle =
 
 prop_splitAt :: forall a . (Arbitrary a, Eq a, Show a) => Property
 prop_splitAt =
-  forAll arbitrary $ \rle ->
+  forAll rles $ \rle ->
   forAll (choose (-1, RLE.length rle + 1)) $ \i ->
   prop_splitAt' @a i rle
 
@@ -59,10 +76,10 @@ prop_splitAt' i rle = (fromList l, fromList r) === RLE.splitAt i rle
 
 main :: IO ()
 main = defaultMain
-  [ testProperty "reverse" (prop_reverse @Int)
-  , testProperty "length" (prop_length @Int)
+  [ testProperty "reverse" (forAll rles $ prop_reverse @Int)
+  , testProperty "length" (forAll rles $ prop_length @Int)
   , testProperty "toList . fromList" (prop_toList_fromList @Int)
-  , testProperty "fromList . toList" (prop_fromList_toList @Int)
+  , testProperty "fromList . toList" (forAll rles $ prop_fromList_toList @Int)
   , testProperty "splitAt" (prop_splitAt @Int)
   , testProperty "take" (prop_take @Int)
   ]

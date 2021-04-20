@@ -16,3 +16,13 @@ resolver: lts-17.9
 
 packages:
 - .
+
+extra-deps:
+- github: google/hs-wrapped
+  commit: e6d3131dda318173009b5158312ecb6c9db5c35d
+  subdirs:
+    - wrapped
+- github: google/hs-portray
+  commit: b60db92fa430b8ff4ef170c57b86500885c25645
+  subdirs:
+    - portray
