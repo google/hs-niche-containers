@@ -1,0 +1,62 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: b53b6d319d758bbd1f4f243262ba2cd4b76c7fbbe465daa5a666e961533b02d8
+
+name:           rle
+version:        0.1.0.0
+synopsis:       A data type of run-length-encoded lists
+description:    Exactly what the synopsis says.
+category:       Data Structures
+homepage:       https://github.com/google/hs-rle#readme
+bug-reports:    https://github.com/google/hs-rle/issues
+author:         Andrew Pritchard <awpr@google.com>
+maintainer:     Andrew Pritchard <awpr@google.com>
+copyright:      2019-2021 Google LLC
+license:        Apache-2.0
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/google/hs-rle
+
+library
+  exposed-modules:
+      Data.RLE
+  other-modules:
+      Paths_rle
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Werror
+  build-depends:
+      QuickCheck
+    , base
+    , cereal
+    , deepseq
+    , pretty
+  default-language: Haskell2010
+
+test-suite RLE-test
+  type: exitcode-stdio-1.0
+  main-is: RLETest.hs
+  other-modules:
+      Paths_rle
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Werror
+  build-depends:
+      QuickCheck
+    , base
+    , cereal
+    , deepseq
+    , pretty
+    , rle
+    , test-framework
+    , test-framework-quickcheck2
+  default-language: Haskell2010
