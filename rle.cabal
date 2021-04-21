@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fb18b59d2f0541d2e599414471366a28a050b57b2c5775232efa1b8a0869932c
+-- hash: dcf1329edd83919859374d74a50e61b664544ee606abfcad86487465939d3321
 
 name:           rle
 version:        0.1.0.0
@@ -39,6 +39,7 @@ library
     , cereal >=0.5.2 && <0.6
     , deepseq >=1.4 && <1.5
     , portray >=0.1 && <0.2
+    , wrapped >=0.1 && <0.2
   default-language: Haskell2010
 
 test-suite RLE-test
@@ -58,4 +59,5 @@ test-suite RLE-test
     , rle
     , test-framework
     , test-framework-quickcheck2
+    , wrapped >=0.1 && <0.2
   default-language: Haskell2010

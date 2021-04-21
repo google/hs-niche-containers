@@ -27,7 +27,7 @@ import Test.QuickCheck
          , Gen, choose, forAll, sized, getPositive
          )
 
-import Data.RLE (RLE, fromList, toList)
+import Data.RLE (RLE, Run((:><)), fromList, toList)
 import qualified Data.RLE as RLE
 
 arbitrarySizedRLE :: Eq a => Gen a -> Int -> Gen (RLE a)
@@ -36,7 +36,7 @@ arbitrarySizedRLE genElement n = do
   resultList <- replicateM n $ do
     element <- genElement
     runLen <- choose (1, getPositive maxRun)
-    pure (runLen, element)
+    pure (runLen :>< element)
   pure (RLE.fromRuns resultList)
 
 rles :: (Eq a, Arbitrary a) => Gen (RLE a)
