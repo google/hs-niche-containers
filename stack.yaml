@@ -27,3 +27,6 @@ extra-deps:
   subdirs:
     - portray
     - portray-pretty # Only to make it available to `stack repl`
+
+ghc-options:
+  "$locals": -Wall -Werror

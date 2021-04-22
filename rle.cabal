@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: dcf1329edd83919859374d74a50e61b664544ee606abfcad86487465939d3321
+-- hash: 854e0ec12390ed33b61a5f9dae34e2f5ddae7894314bdb8e20aef904048fb65d
 
 name:           rle
 version:        0.1.0.0
@@ -33,7 +33,6 @@ library
       Paths_rle
   hs-source-dirs:
       src
-  ghc-options: -Wall -Werror
   build-depends:
       base >=4.12 && <4.16
     , cereal >=0.5.2 && <0.6
@@ -49,7 +48,6 @@ test-suite RLE-test
       Paths_rle
   hs-source-dirs:
       test
-  ghc-options: -Wall -Werror
   build-depends:
       QuickCheck
     , base >=4.12 && <4.16

@@ -27,8 +27,6 @@ github: google/hs-rle
 extra-source-files:
   CHANGELOG.md
 
-ghc-options: -Wall -Werror
-
 dependencies:
   - base >= 4.12 && < 4.16
   - cereal >= 0.5.2 && < 0.6
