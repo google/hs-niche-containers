@@ -23,9 +23,10 @@ extra-deps:
   subdirs:
     - wrapped
 - github: google/hs-portray
-  commit: 9a2b5f283cde4f80cfc44c3fcf0131b89120e862
+  commit: 0ee77d08f669daaad99e30202a991bd5358cd1e6
   subdirs:
     - portray
+    - portray-diff
     - portray-pretty # Only to make it available to `stack repl`
 
 ghc-options:

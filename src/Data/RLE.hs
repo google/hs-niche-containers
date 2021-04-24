@@ -66,6 +66,7 @@ import GHC.Stack (HasCallStack)
 
 import Control.DeepSeq (NFData)
 import Data.Portray (Portray(..), Portrayal(..))
+import Data.Portray.Diff (Diff(..))
 import Data.Serialize (Serialize)
 import Data.Wrapped (Wrapped(..))
 
@@ -73,7 +74,7 @@ infixr 5 :><
 data Run a = Int :>< a
   deriving stock (Eq, Show, Generic, Functor)
   deriving anyclass (NFData, Serialize)
-  deriving Portray via Wrapped Generic (Run a)
+  deriving (Portray, Diff) via Wrapped Generic (Run a)
 
 instance Foldable Run where foldMap f (n :>< x) = stimes n (f x)
 
@@ -111,6 +112,9 @@ newtype RLE a = RLE
 
 instance Portray a => Portray (RLE a) where
   portray rle = Apply "fromRuns" [List $ portray <$> toRuns rle]
+
+instance (Portray a, Diff a) => Diff (RLE a) where
+  diff x y = Apply "fromRuns" . pure <$> diff (toRuns x) (toRuns y)
 
 instance Eq a => IsList (RLE a) where
   type Item (RLE a) = a
