@@ -243,13 +243,12 @@ traverse f rle = case unconsRun rle of
     <$> replicateM n (f x)
     <*> traverse f rs
 
--- | 'Control.Lens.Fold' over the contained runs in order.
+-- | @Fold@ over the contained runs in order.
 --
 -- This is as strong a type as this can have without breaking any laws, due to
 -- the invariants that no empty or mergeable runs exist: if we make it a
--- 'Control.Lens.Traversal', it can end up changing the number of targets, and
--- if we make it an 'Control.Lens.Iso' to @[(Int, a)]@, the reverse direction
--- is not an isomorphism.
+-- @Traversal@, it can end up changing the number of targets, and if we make it
+-- an @Iso@ to @[(Int, a)]@, the reverse direction is not an isomorphism.
 --
 -- If you want to use a law-breaking @Iso@ or @Traversal@ for this anyway, use
 -- @iso 'fromRuns' 'toRuns'@ to inline the problematic @Iso@.
