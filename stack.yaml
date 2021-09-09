@@ -18,16 +18,10 @@ packages:
 - .
 
 extra-deps:
-- github: google/hs-wrapped
-  commit: e6d3131dda318173009b5158312ecb6c9db5c35d
-  subdirs:
-    - wrapped
-- github: google/hs-portray
-  commit: 0ee77d08f669daaad99e30202a991bd5358cd1e6
-  subdirs:
-    - portray
-    - portray-diff
-    - portray-pretty # Only to make it available to `stack repl`
+- wrapped-0.1.0.0
+- portray-0.1.0.0
+- portray-diff-0.1.0.0
+- portray-pretty-0.1.0.0 # Only to make it available to `stack repl`
 
 ghc-options:
   "$locals": -Wall -Werror
