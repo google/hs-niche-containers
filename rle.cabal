@@ -4,12 +4,14 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 36e8f6654ed71b0c3f318a16a68625fb3bda137cefb28c52f88ebbdd23c5f3fe
+-- hash: 5dd2df18ed4d9085540be3036e2efcf42e04d42f9c0549217d35bbef7e9f9aeb
 
 name:           rle
 version:        0.1.0.0
 synopsis:       A data type of run-length-encoded lists
-description:    Exactly what the synopsis says.
+description:    Provides an @RLE@ type that stores a sequence of elements in the form of
+                length/value pairs, stored in a normal form with no adjacent runs of equal
+                values.
 category:       Data Structures
 homepage:       https://github.com/google/hs-rle#readme
 bug-reports:    https://github.com/google/hs-rle/issues

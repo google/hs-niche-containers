@@ -16,7 +16,10 @@ name: rle
 version: 0.1.0.0
 category: Data Structures
 synopsis: A data type of run-length-encoded lists
-description: Exactly what the synopsis says.
+description: |
+  Provides an @RLE@ type that stores a sequence of elements in the form of
+  length/value pairs, stored in a normal form with no adjacent runs of equal
+  values.
 license: Apache-2.0
 author: Andrew Pritchard <awpr@google.com>
 copyright: 2019-2021 Google LLC
