@@ -12,12 +12,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
--- | A data type of run-length-encoded lists.
---
--- This module is meant to be imported qualified with the exception of the type
--- RLE itself.  It exports names that clash with things in Prelude and many
--- other data structure modules.
-
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveFunctor #-}
@@ -31,19 +25,20 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE ViewPatterns #-}
 
+-- | A data type of run-length-encoded lists.
+--
+-- This module is meant to be imported qualified with the exception of the type
+-- RLE itself.  It exports names that clash with things in Prelude and many
+-- other data structure modules.
+
 module Data.RLE
-         ( RLE, Run(..)
-         , toList, toRuns
-         , fromList, fromRuns
-         , cons, consRun
-         , uncons, unconsRun
-         , reverse
-         , singleton
-         , splitAt, take
-         , init, null, length, empty
-         , (++)
+         ( -- * Run-Length Encoded Lists
+           RLE
+         , toList, fromList, singleton, empty, cons, uncons
+         , reverse, splitAt, take, init, null, length, (++)
          , map, mapInvertible, traverse, zipWith
-         , runs
+           -- ** Runs
+         , Run(..), toRuns, fromRuns, consRun, unconsRun, runs
          ) where
 
 import Prelude hiding
@@ -71,6 +66,7 @@ import Data.Serialize (Serialize)
 import Data.Wrapped (Wrapped(..))
 
 infixr 5 :><
+-- | @n :>< x@ denotes a sequence of @n@ copies of @x@, as part of an 'RLE'.
 data Run a = Int :>< a
   deriving stock (Eq, Show, Generic, Functor)
   deriving anyclass (NFData, Serialize)
@@ -148,15 +144,18 @@ empty = RLE []
 null :: RLE a -> Bool
 null = P.null . toRuns
 
+-- | 'Data.Foldable.length' specialized to 'RLE'.
 length :: RLE a -> Int
 length (RLE rs0) = go rs0
  where
   go [] = 0
   go ((n :>< _) : rs) = n + go rs
 
+-- | Run-length-encode a list by testing adjacent elements for equality.
 fromList :: Eq a => [a] -> RLE a
 fromList = foldr cons empty
 
+-- | 'Data.Foldable.toList' specialized to 'RLE'.
 toList :: RLE a -> [a]
 toList (RLE [])          = []
 toList (RLE ((n :>< x):xs)) = replicate n x <> toList (RLE xs)
@@ -184,6 +183,7 @@ unconsRun :: RLE a -> Maybe (Run a, RLE a)
 unconsRun (RLE (r:rs)) = Just (r, RLE rs)
 unconsRun _            = Nothing
 
+-- | Return an 'RLE' containing the first @n@ elements of the input.
 take :: Int -> RLE a -> RLE a
 take n (RLE xs) = RLE (go n xs)
   where
@@ -234,7 +234,7 @@ mapInvertible f (RLE xs) = RLE (fmap (fmap f) xs)
 -- | Visit each element of the sequence in an 'Applicative'.
 --
 -- @
---     traverse :: Eq b => Traversal (RLE a) (RLE b) a b
+-- traverse :: Eq b => Traversal (RLE a) (RLE b) a b
 -- @
 traverse :: (Eq b, Applicative f) => (a -> f b) -> RLE a -> f (RLE b)
 traverse f rle = case unconsRun rle of
@@ -243,18 +243,19 @@ traverse f rle = case unconsRun rle of
     <$> replicateM n (f x)
     <*> traverse f rs
 
--- | 'Fold' over the contained runs in order.
+-- | 'Control.Lens.Fold' over the contained runs in order.
 --
 -- This is as strong a type as this can have without breaking any laws, due to
 -- the invariants that no empty or mergeable runs exist: if we make it a
--- 'Traversal', it can end up changing the number of targets, and if we make it
--- an 'Iso' to @[(Int, a)]@, the reverse direction is not an isomorphism.
+-- 'Control.Lens.Traversal', it can end up changing the number of targets, and
+-- if we make it an 'Control.Lens.Iso' to @[(Int, a)]@, the reverse direction
+-- is not an isomorphism.
 --
--- If you want to use a law-breaking 'Iso' or 'Traversal' for this anyway, use
--- @iso 'fromRuns' 'toRuns'@ to inline the problematic Iso.
+-- If you want to use a law-breaking @Iso@ or @Traversal@ for this anyway, use
+-- @iso 'fromRuns' 'toRuns'@ to inline the problematic @Iso@.
 --
 -- @
---     runs :: Fold (RLE a) (Int, a)
+-- runs :: Fold (RLE a) (Int, a)
 -- @
 runs
   :: (Contravariant f, Applicative f)
@@ -279,6 +280,7 @@ zipWith f (RLE xs0) (RLE ys0) = RLE $ go xs0 ys0
     GT -> (ny :>< f x y) `consRun_` go ((nx-ny :>< x) : xs) ys
     EQ -> (nx :>< f x y) `consRun_` go xs ys
 
+-- | Return an 'RLE' containing all but the last element of the input.
 init :: HasCallStack => RLE a -> RLE a
 init (RLE rs0) = RLE $ go rs0
  where
