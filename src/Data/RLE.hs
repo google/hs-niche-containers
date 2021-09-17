@@ -12,7 +12,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
-{-# LANGUAGE CPP #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveFoldable #-}
@@ -107,10 +106,10 @@ newtype RLE a = RLE
   deriving anyclass (NFData, Serialize)
 
 instance Portray a => Portray (RLE a) where
-  portray rle = Apply "fromRuns" [List $ portray <$> toRuns rle]
+  portray rle = Apply (Name "fromRuns") [List $ portray <$> toRuns rle]
 
 instance (Portray a, Diff a) => Diff (RLE a) where
-  diff x y = Apply "fromRuns" . pure <$> diff (toRuns x) (toRuns y)
+  diff x y = Apply (Name "fromRuns") . pure <$> diff (toRuns x) (toRuns y)
 
 instance Eq a => IsList (RLE a) where
   type Item (RLE a) = a

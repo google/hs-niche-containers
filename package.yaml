@@ -13,7 +13,7 @@
 # limitations under the License.
 
 name: rle
-version: 0.1.0.0
+version: 0.1.0.1
 category: Data Structures
 synopsis: A data type of run-length-encoded lists
 description: |
@@ -34,7 +34,7 @@ dependencies:
   - base >= 4.12 && < 4.16
   - cereal >= 0.5.2 && < 0.6
   - deepseq >= 1.4 && < 1.5
-  - portray >= 0.1 && < 0.2
+  - portray >= 0.1.1 && < 0.3
   - portray-diff >= 0.1 && < 0.2
   - wrapped >= 0.1 && < 0.2
 
