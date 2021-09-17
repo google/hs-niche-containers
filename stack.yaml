@@ -19,9 +19,9 @@ packages:
 
 extra-deps:
 - wrapped-0.1.0.0
-- portray-0.1.1
-- portray-diff-0.1.0.0
-- portray-prettyprinter-0.1.0 # Only to make it available to `stack repl`
+- portray-0.2.0
+- portray-diff-0.1.0.1
+- portray-prettyprinter-0.2.0 # Only to make it available to `stack repl`
 
 ghc-options:
   "$locals": -Wall -Werror
