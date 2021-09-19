@@ -43,6 +43,10 @@ library:
   exposed-modules:
     - Data.RLE
 
+  when:
+    condition: false
+    other-modules: Paths_rle
+
 tests:
   RLE-test:
     source-dirs: test
@@ -52,3 +56,7 @@ tests:
       - QuickCheck
       - test-framework
       - test-framework-quickcheck2
+
+    when:
+      condition: false
+      other-modules: Paths_rle

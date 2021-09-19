@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: cbfdcf1f62bcb47b04c8b1568877918c43f99169e6fe5b58d27799382c13baed
+-- hash: 7de60334592692304d6f2b77b343442f70cea79169be470c745be5db112b8ea4
 
 name:           rle
 version:        0.1.0.1
@@ -31,8 +31,6 @@ source-repository head
 library
   exposed-modules:
       Data.RLE
-  other-modules:
-      Paths_rle
   hs-source-dirs:
       src
   build-depends:
@@ -47,8 +45,6 @@ library
 test-suite RLE-test
   type: exitcode-stdio-1.0
   main-is: RLETest.hs
-  other-modules:
-      Paths_rle
   hs-source-dirs:
       test
   build-depends:
