@@ -15,7 +15,7 @@
 resolver: lts-18.10
 
 packages:
-- .
+- rle
 
 extra-deps:
 - wrapped-0.1.0.0
