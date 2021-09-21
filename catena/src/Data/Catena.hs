@@ -12,27 +12,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
--- | Provides a list-like data structure 'Catena' with O(1) concat.
---
--- This is particularly meant to be used for "long-term" accumulations of
--- lists, in place of 'DList', which is well-suited to "short-term"
--- accumulations of lists.  The latter is represented by a "prepender function"
--- which takes the tail of the list and adds the contents of the 'DList' as a
--- prefix.  This behaves nicely in small scopes like as the 'Monoid' of a
--- 'foldMap', where GHC can optimize away the function entirely, but not so
--- nicely as a structure that's kept in memory for any significant time: it
--- can't have "honest" instances for classes like 'NFData', as everything has
--- to be done via conversion to lists.
---
--- So, 'Catena' implements a similar in-memory structure to the tree of
--- closures you would get from using 'DList', but using algebraic data types
--- rather than closures.  It also ultimately stores its elements in
--- 'SmallArray's rather than in lists, to use fewer data constructors.
---
--- For those familiar with GHC's implementation, this is very similar to its
--- 'Bag' type, but the name 'Bag' could be mixed up with a multiset, so we call
--- it something else that's highly unlikely to have a naming conflict.
-
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
@@ -43,12 +22,35 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
+-- | Provides a list-like data structure 'Catena' with O(1) concat.
+--
+-- This is particularly meant to be used for "long-term" accumulations of
+-- lists, in place of @DList@, which is well-suited to "short-term"
+-- accumulations of lists.  The latter is represented by a "prepender function"
+-- which takes the tail of the list and adds the contents of the @DList@ as a
+-- prefix.  This behaves nicely in small scopes like as the 'Monoid' of a
+-- 'foldMap', where GHC can optimize away the function entirely, but not so
+-- nicely as a structure that's kept in memory for any significant time: it
+-- can't have "honest" instances for classes like 'NFData', as everything has
+-- to be done via conversion to lists.
+--
+-- So, 'Catena' implements a similar in-memory structure to the tree of
+-- closures you would get from using @DList@, but using algebraic data types
+-- rather than closures.  It also ultimately stores its elements in
+-- 'SmallArray's rather than in lists, to use fewer data constructors.
+--
+-- For those familiar with GHC's implementation, this is very similar to its
+-- @Bag@ type, but the name @Bag@ could be mixed up with a multiset, so we call
+-- it something else that's highly unlikely to have a naming conflict.
+
 module Data.Catena
-         ( Catena
+         ( -- * Catena
+           Catena
          , empty, fromList, toList
          , singleton
          , concatMap
          , prepend
+           -- ** Operators
          , (🔗)
          ) where
 
@@ -135,21 +137,29 @@ instance Applicative Catena where
 -- | '[]'-style instance: concatMap.
 instance Monad Catena where (>>=) = flip concatMap
 
+-- | An empty 'Catena'.
 empty :: Catena a
 empty = Empty
 
+-- | A 'Catena' containing a singular element.
 singleton :: a -> Catena a
 singleton = Singleton
 
+-- | Convert a list to a 'Catena'.
+--
+-- The result will be packed to a single 'SmallArray'.
 fromList :: [a] -> Catena a
 fromList = PackedR Empty . Exts.fromList
 
+-- | Convert a 'Catena' back to a list.
 toList :: Catena a -> [a]
 toList = F.toList
 
+-- | Map each element to a sub-sequence and con'Catena'te the result.
 concatMap :: (a -> Catena b) -> Catena a -> Catena b
 concatMap f = foldMap f . toList
 
+-- | Convert a 'Catena' to a list-prepender function, like @DList@.
 prepend :: Catena a -> [a] -> [a]
 prepend = flip (foldr (:))
 
