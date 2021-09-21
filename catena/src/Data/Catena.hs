@@ -12,6 +12,7 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
@@ -58,12 +59,12 @@ import Prelude hiding (concatMap)
 
 import Control.Applicative (Applicative(..))
 import Control.Monad (liftM2)
-import qualified Data.Foldable as F (toList)
+import qualified Data.Foldable as F
 import GHC.Exts (IsList)
 import qualified GHC.Exts as Exts (IsList(..))
 import GHC.Generics (Generic, Generic1)
 
-import Control.DeepSeq (NFData)
+import Control.DeepSeq (NFData(..))
 import Data.Portray (Portray)
 import Data.Portray.Diff (Diff)
 import Data.Primitive.SmallArray (SmallArray)
@@ -79,7 +80,12 @@ newtype SerArray a = SerArray { unSerArray :: SmallArray a }
     , IsList
     , Semigroup, Monoid
     )
+#if MIN_VERSION_primitive(0, 7, 1)
   deriving anyclass NFData
+#else
+instance NFData a => NFData (SerArray a) where
+  rnf (SerArray arr) = F.foldl' (\ () -> rnf) () arr
+#endif
 
 instance Serialize a => Serialize (SerArray a) where
   put = put . F.toList . unSerArray
