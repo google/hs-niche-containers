@@ -1,0 +1,48 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: catena
+version: 0.1.0
+category: Data Structures
+synopsis: A concrete sequence type with O(1) concatenation.
+description: |
+  A sequence type for long-term accumulation of many elements.  For more
+  details, see the <#readme README>.
+license: Apache-2.0
+author: Andrew Pritchard <awpr@google.com>
+copyright: 2020-2021 Google LLC
+maintainer: Andrew Pritchard <awpr@google.com>
+github: google/hs-niche-containers/catena
+
+# Note: this causes CHANGELOG.md to be included in Hackage distributions.
+extra-source-files:
+  CHANGELOG.md
+
+dependencies:
+  - base >= 4.12 && < 4.16
+  - cereal >= 0.5.2 && < 0.6
+  - deepseq >= 1.4 && < 1.5
+  - portray >= 0.1.1 && < 0.3
+  - portray-diff >= 0.1 && < 0.2
+  - primitive >= 0.7.1 && < 0.8
+  - wrapped >= 0.1 && < 0.2
+
+library:
+  source-dirs: src
+  exposed-modules:
+    - Data.Catena
+
+  when:
+    condition: false
+    other-modules: Paths_catena

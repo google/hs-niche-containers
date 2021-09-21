@@ -1,0 +1,42 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           catena
+version:        0.1.0
+synopsis:       A concrete sequence type with O(1) concatenation.
+description:    A sequence type for long-term accumulation of many elements.  For more
+                details, see the <#readme README>.
+category:       Data Structures
+homepage:       https://github.com/google/hs-niche-containers#readme
+bug-reports:    https://github.com/google/hs-niche-containers/issues
+author:         Andrew Pritchard <awpr@google.com>
+maintainer:     Andrew Pritchard <awpr@google.com>
+copyright:      2020-2021 Google LLC
+license:        Apache-2.0
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/google/hs-niche-containers
+  subdir: catena
+
+library
+  exposed-modules:
+      Data.Catena
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.12 && <4.16
+    , cereal >=0.5.2 && <0.6
+    , deepseq ==1.4.*
+    , portray >=0.1.1 && <0.3
+    , portray-diff ==0.1.*
+    , primitive >=0.7.1 && <0.8
+    , wrapped ==0.1.*
+  default-language: Haskell2010

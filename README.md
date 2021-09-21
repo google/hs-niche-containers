@@ -1,6 +1,6 @@
-# rle
+# niche-containers
 
-A run-length-encoded list type.
+Several packages providing niche-use data structures.
 
 [![Stack CI](https://github.com/google/hs-rle/actions/workflows/stack-ci.yml/badge.svg)](https://github.com/google/hs-rle/actions/workflows/stack-ci.yml)
 

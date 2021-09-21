@@ -15,6 +15,7 @@
 resolver: lts-18.10
 
 packages:
+- catena
 - rle
 
 extra-deps:
